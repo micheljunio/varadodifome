@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VARADO DI FOME | A Hamburgueria Brutal</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- CONFIGURAÇÕES GERAIS (CSS VARIABLES) --- */
+        :root {
+            --primary: #FF9900;
+            --primary-dark: #cc7a00;
+            --secondary: #D92500;
+            --bg-dark: #0a0a0a;
+            --bg-card: #141414;
+            --text-main: #ffffff;
+            --text-muted: #b3b3b3;
+            --glass: rgba(20, 20, 20, 0.85);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --font-display: 'Bebas Neue', cursive;
+            --font-body: 'Manrope', sans-serif;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        /* RESET */
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; list-style: none; text-decoration: none; }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* TIPOGRAFIA */
+        h1, h2, h3, .btn { font-family: var(--font-display); letter-spacing: 1px; text-transform: uppercase; }
+        
+        .text-gradient {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        /* BOTÕES */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 12px 35px; border-radius: 4px; font-size: 1.2rem;
+            transition: all 0.3s ease; cursor: pointer; border: none; position: relative; overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: var(--gradient); color: white;
+            box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255, 153, 0, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent; border: 2px solid var(--primary); color: var(--primary);
+        }
+        
+        .btn-outline:hover { background: var(--primary); color: white; }
+
+        .btn-card {
+            width: 100%; padding: 10px; background: #222; color: white; font-size: 1rem; margin-top: 15px; border-radius: 4px;
+        }
+        .btn-card:hover { background: var(--primary); color: black; }
+
+        /* HEADER & NAV */
+        header {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
+            transition: 0.4s ease;
+        }
+        
+        header.scrolled {
+            background: var(--glass); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-glass); padding: 15px 5%;
+        }
+
+        .logo { font-size: 2rem; color: white; line-height: 1; }
+        .logo span { color: var(--primary); }
+
+        .nav-menu { display: flex; gap: 30px; }
+        .nav-menu a { color: white; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
+        .nav-menu a:hover { color: var(--primary); }
+
+        .mobile-toggle { display: none; font-size: 1.5rem; color: white; cursor: pointer; }
+
+        /* HERO SECTION (VÍDEO) */
+        .hero {
+            height: 100vh; display: flex; align-items: center; justify-content: flex-start;
+            padding: 0 5%; position: relative; overflow: hidden;
+        }
+
+        .video-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: -2; filter: brightness(0.4);
+        }
+        
+        .hero-overlay {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 50%;
+            background: linear-gradient(to top, var(--bg-dark), transparent); z-index: -1;
+        }
+
+        .hero-content { max-width: 650px; z-index: 2; }
+        
+        .hero-content h1 {
+            font-size: 5rem; line-height: 0.9; margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem; color: #ddd; margin-bottom: 30px; font-weight: 300;
+        }
+
+        /* MENU CATEGORIAS */
+        .menu-section { padding: 80px 5%; }
+        
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-header h2 { font-size: 3.5rem; margin-bottom: 10px; }
+        .section-header p { color: var(--text-muted); }
+
+        .category-block { margin-bottom: 80px; }
+        
+        .cat-title {
+            font-size: 2rem; margin-bottom: 30px; display: flex; align-items: center; gap: 15px;
+            border-bottom: 1px solid #333; padding-bottom: 10px;
+        }
+        .cat-title i { color: var(--primary); }
+
+        .grid-products {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;
+        }
+
+        /* CARD DO PRODUTO */
+        .card {
+            background: var(--bg-card); border: 1px solid #222; border-radius: 12px;
+            overflow: hidden; transition: 0.3s; display: flex; flex-direction: column;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-8px); border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .card-img-wrap {
+            width: 100%; height: 260px; overflow: hidden; position: relative;
+            background: #1a1a1a; /* Placeholder color */
+        }
+
+        .card-img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-img { transform: scale(1.08); }
+
+        .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        .card-title { font-size: 1.4rem; color: white; margin-bottom: 5px; line-height: 1.1; }
+        .card-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; }
+        
+        .card-badge {
+            position: absolute; top: 10px; right: 10px; background: var(--secondary);
+            color: white; padding: 4px 8px; font-size: 0.8rem; font-weight: bold; border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5); z-index: 2;
+        }
+
+        /* PARALLAX & PROMO */
+        .promo {
+            background-image: url('https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1965');
+            background-attachment: fixed; background-size: cover; background-position: center;
+            padding: 100px 5%; text-align: center; position: relative;
+        }
+        .promo::before { content:''; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); }
+        .promo-content { position: relative; z-index: 2; border: 2px solid rgba(255,255,255,0.2); padding: 40px; display: inline-block; backdrop-filter: blur(5px); }
+        
+        /* FOOTER */
+        footer { background: black; padding: 60px 5% 20px; border-top: 1px solid #222; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer-col h4 { color: var(--primary); margin-bottom: 20px; font-size: 1.3rem; }
+        .socials a { display: inline-flex; width: 40px; height: 40px; background: #222; color: white; border-radius: 50%; justify-content: center; align-items: center; margin-right: 10px; transition: 0.3s; }
+        .socials a:hover { background: var(--primary); }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 3.2rem; }
+            .section-header h2 { font-size: 2.5rem; }
+            
+            .mobile-toggle { display: block; }
+            .nav-menu {
+                position: fixed; top: 0; right: -100%; width: 75%; height: 100vh;
+                background: #111; flex-direction: column; padding: 100px 30px;
+                transition: 0.3s; z-index: 999; box-shadow: -5px 0 20px rgba(0,0,0,0.8);
+            }
+            .nav-menu.active { right: 0; }
+        }
+
+        /* SCROLL ANIMATION CLASS */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s all ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="header">
+        <a href="#" class="logo">VARADO DI <span>FOME</span></a>
+        
+        <nav class="nav-menu">
+            <a href="#destaques">Destaques</a>
+            <a href="#smash">Smash Burgers</a>
+            <a href="#monstros">Linha Varado</a>
+            <a href="#barcas">Barcas</a>
+            <a href="#combos">Combos</a>
+        </nav>
+
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <a href="https://varadodifome.menudino.com.br/" target="_blank" class="btn btn-primary" style="font-size: 1rem; padding: 8px 20px;">
+                <i class="fas fa-motorcycle" style="margin-right: 8px;"></i> PEDIR
+            </a>
+            <div class="mobile-toggle"><i class="fas fa-bars"></i></div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <video class="video-bg" autoplay muted loop playsinline poster="https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/57403303-8025-42d3-95c3-ff84e2620aa2_20260107202506.webp">
+            <source src="https://videos.pexels.com/video-files/3205929/3205929-uhd_2560_1440_25fps.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content reveal">
+            <h1>A SOLUÇÃO DEFINITIVA <br>PARA QUEM TÁ <span class="text-gradient">VARADO DE FOME</span></h1>
+            <p>Os maiores, mais suculentos e brutais hambúrgueres da região. Peça agora e receba no conforto de casa.</p>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <a href="https://varadodifome.menudino.com.br/" target="_blank" class="btn btn-primary">FAZER PEDIDO</a>
+                <a href="#destaques" class="btn btn-outline">VER CARDÁPIO</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefícios -->
+    <div style="background: #111; padding: 30px 5%; display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; border-bottom: 1px solid #222;">
+        <div style="display: flex; align-items: center; gap: 10px; color: #ddd;">
+            <i class="fas fa-clock" style="color: var(--primary); font-size: 1.5rem;"></i>
+            <div><strong>Entrega Rápida</strong><br><span style="font-size: 0.8rem; color: #888;">50-60 min</span></div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; color: #ddd;">
+            <i class="fas fa-star" style="color: var(--primary); font-size: 1.5rem;"></i>
+            <div><strong>Avaliação 4.8/5</strong><br><span style="font-size: 0.8rem; color: #888;">Qualidade Garantida</span></div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; color: #ddd;">
+            <i class="fas fa-utensils" style="color: var(--primary); font-size: 1.5rem;"></i>
+            <div><strong>Ingredientes Premium</strong><br><span style="font-size: 0.8rem; color: #888;">Sabor Inigualável</span></div>
+        </div>
+    </div>
+
+    <!-- Seção do Menu (Renderizada via JS) -->
+    <section class="menu-section">
+        <div class="section-header reveal">
+            <h2>NOSSA <span class="text-gradient">VITRINE</span></h2>
+            <p>Escolha sua categoria e clique para ver o preço atualizado no MenuDino</p>
+        </div>
+
+        <!-- Container para os produtos -->
+        <div id="menu-container"></div>
+
+    </section>
+
+    <!-- Promoção Parallax -->
+    <section class="promo">
+        <div class="promo-content reveal">
+            <h2>PROMO <span style="color: var(--primary);">FRIENDS</span></h2>
+            <p style="font-size: 1.5rem; color: white; margin: 15px 0;">COMPRE UM COMBO E GANHE VANTAGENS EXCLUSIVAS</p>
+            <a href="https://varadodifome.menudino.com.br/" target="_blank" class="btn btn-primary">APROVEITAR AGORA</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <a href="#" class="logo">VARADO DI <span>FOME</span></a>
+                <p style="color: #888; margin-top: 15px;">Hamburgueria artesanal focada em matar a sua fome com qualidade e sabor brutal.</p>
+                <div class="socials" style="margin-top: 20px;">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Atendimento</h4>
+                <ul style="color: #bbb;">
+                    <li><i class="far fa-clock" style="color: var(--primary); margin-right:8px;"></i> Terça a Domingo</li>
+                    <li><i class="fas fa-hourglass-start" style="color: var(--primary); margin-right:8px;"></i> 18:00 às 23:30</li>
+                    <li style="margin-top: 10px;"><a href="https://varadodifome.menudino.com.br/" class="text-gradient">Pedir Online</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Localização</h4>
+                <div style="width: 100%; height: 120px; background: #222; border-radius: 8px;">
+                     <!-- Placeholder Mapa -->
+                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657!2d-46.6!3d-23.5!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDMzJzQxLjAiUyA0NsKwMzknMTguMCJX!5e0!3m2!1spt-BR!2sbr!4v1620000000000" width="100%" height="100%" style="border:0; filter: grayscale(100%) invert(90%); border-radius: 8px;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; color: #555; border-top: 1px solid #222; padding-top: 20px;">
+            &copy; 2026 Varado Di Fome. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT: Lógica de Renderização e Animação -->
+    <script>
+        // --- 1. DADOS DOS PRODUTOS (JSON FORNECIDO) ---
+        const productsData = [
+          { "nome": "To com fome + Trio", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/57403303-8025-42d3-95c3-ff84e2620aa2_20260107202506.webp" },
+          { "nome": "Compre um Combo Friends e ganhe 1 Tô com Fome", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/36cb1093-fece-4335-8a77-ace21c9df94b_20251011195128.webp" },
+          { "nome": "TO COM FOME", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/05386905-1a75-4242-be1f-61764a5bb6ae_20251226200802.webp" },
+          { "nome": "CHICKEN FAMINTO", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/dec7a835-9771-4532-b8bc-0caec960f514_20251204200858.webp" },
+          { "nome": "FOME CREMOSA", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/2fb5e44c-a284-4f5c-9cdc-3c497a4eee45_20250527175025.webp" },
+          { "nome": "MORTO DE FOME", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/cc77d807-d0d0-48fc-a819-749f80a4d72f_20251223203621.webp" },
+          { "nome": "FOME DE PICLES", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/94dd152f-4e28-478e-aa13-a9b4ade7dfed_20250927025830.webp" },
+          { "nome": "TROPICAL", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/5d8cd1d0-61b4-4cd4-801b-c0affc896b89_20251206203242.webp" },
+          { "nome": "Tô Com Muita Fome", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/ee1fcc4f-d4c4-4776-9bfb-54abcdb306e5_20251227203651.webp" },
+          { "nome": "Deu Melt", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/2a188627-98ed-4687-9e7b-2cf17ede0cab_20251208203009.webp" },
+          { "nome": "PISCININHA DE CHEDDAR", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/a3bcac72-6b93-419e-b341-08ae6be89b8f_20250527175026.webp" },
+          { "nome": "FOME DE BACON", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/0969a5ac-91af-418f-b918-d9fa9ff75a65_20251122230458.webp" },
+          { "nome": "FOME CROCANTE", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/84a9479d-3d38-42b5-b3bd-a53c03a63f0e_20251025203014.webp" },
+          { "nome": "TO BROCADO", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/63462086-8a04-4e7a-bc73-5fdec0eedc57_20251213202242.webp" },
+          { "nome": "Arretado", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/b9f286c1-6919-44a2-8c21-be3111ca5e2d_20251021193322.webp" },
+          { "nome": "VARADO DI FOME", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/ccd6e2a7-a32c-4ae8-addb-505ddbf0be4a_20250527175028.webp" },
+          { "nome": "SMASH BACON", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/bf992c79-735a-4102-a9f5-a4d9ff1fb36b_20250527175051.webp" },
+          { "nome": "SMASH DUPLO", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/3a729c5e-7bc6-483e-8897-a909fdceb221_20251224201349.webp" },
+          { "nome": "SMASH PICLES", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/0963cd22-cb70-4375-a779-5c69d4d91008_20250527175053.webp" },
+          { "nome": "SMASH CREMOSO", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/8b1b4852-480c-4b6a-8c2b-8b4e8baf5cd1_20250527175052.webp" },
+          { "nome": "SMASH KING", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/f51eab99-3847-4923-8959-160b33ec9a47_20250527175052.webp" },
+          { "nome": "BIG SMASH", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/ac418a64-7b30-4e42-a981-b864d4984805_20251001194544.webp" },
+          { "nome": "VARADO SUPREMO", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/9a68e9e6-2f1a-4304-955a-606c308177e5_20251001194545.webp" },
+          { "nome": "X-TUDO", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/6b50935e-46c5-4b16-9e82-eb1c1fb2274f_20251129203900.webp" },
+          { "nome": "COMBO SMASH KING", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/b67aaade-97df-4611-9071-fa07308a9960_20250527175037.webp" },
+          { "nome": "COMBO TÔ COM MUITA FOME", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/f54f46af-416b-40cb-9637-a8cd7b2c03d0_20250527175037.webp" },
+          { "nome": "COMBO MONSTRUOSO", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/1e4fad76-b776-4511-a071-4d2b9f29e09a_20250527175035.webp" },
+          { "nome": "BARCA PETISCO", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/a9165ca3-a8a9-4eda-acd7-931470126943_20250824215103.webp" },
+          { "nome": "BARCA FOME DE BACON", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/4a39769f-c9f9-4f39-a72e-f2417668476b_20250828232034.webp" },
+          { "nome": "BARCA TÔ VARADO", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/8df8116e-3741-4506-9e75-065ab53676ae_20250925220923.webp" },
+          { "nome": "COMBO BOMBA", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/a0460ab7-7475-43c4-9a96-9faf477662de_20251105204055.webp" },
+          { "nome": "Porção de Cebola Empanada", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/e7f5d855-efd1-42e7-bd65-77911c1da8fb_20250527175020.webp" },
+          { "nome": "BATATA G", "imagem_hd": "https://files.menudino.com/merchants/3d34fd17-e67e-468e-aad2-40f34cb5638b/items/images/large/dd2725ef-7018-407f-9297-81ba50eb83dc_20250527175022.webp" }
+        ];
+
+        // --- 2. CONFIGURAÇÃO DAS CATEGORIAS DO SITE ---
+        // Aqui definimos quais produtos vão para cada seção com base no nome
+        const categories = [
+            {
+                id: 'destaques',
+                title: 'Destaques & Promoções',
+                icon: 'fas fa-medal',
+                filter: (item) => ['COMBO MONSTRUOSO', 'VARADO SUPREMO', 'BARCA PETISCO', 'TO COM FOME'].includes(item.nome)
+            },
+            {
+                id: 'smash',
+                title: 'Smash Burgers (Crocantes)',
+                icon: 'fas fa-fire',
+                filter: (item) => item.nome.includes('SMASH') && !item.nome.includes('COMBO')
+            },
+            {
+                id: 'monstros',
+                title: 'Linha Varado (Artesanais)',
+                icon: 'fas fa-dragon',
+                filter: (item) => (item.nome.includes('FOME') || item.nome.includes('VARADO') || item.nome.includes('BROCADO')) && !item.nome.includes('SMASH') && !item.nome.includes('COMBO') && !item.nome.includes('BARCA')
+            },
+            {
+                id: 'combos',
+                title: 'Combos Completos',
+                icon: 'fas fa-utensils',
+                filter: (item) => item.nome.includes('COMBO')
+            },
+            {
+                id: 'barcas',
+                title: 'Barcas Gigantes',
+                icon: 'fas fa-ship',
+                filter: (item) => item.nome.includes('BARCA')
+            }
+        ];
+
+        // --- 3. FUNÇÃO DE RENDERIZAÇÃO ---
+        const renderMenu = () => {
+            const container = document.getElementById('menu-container');
+            
+            categories.forEach(cat => {
+                // Filtra os produtos
+                const items = productsData.filter(cat.filter);
+                
+                if (items.length > 0) {
+                    // Cria o bloco da categoria
+                    const sectionHTML = `
+                        <div class="category-block reveal" id="${cat.id}">
+                            <h3 class="cat-title">
+                                <i class="${cat.icon}"></i> ${cat.title}
+                            </h3>
+                            <div class="grid-products">
+                                ${items.map(product => createCard(product)).join('')}
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += sectionHTML;
+                }
+            });
+        };
+
+        // Cria o HTML de um único card
+        const createCard = (product) => {
+            // Se não tiver imagem HD (fallback)
+            const imgUrl = product.imagem_hd && product.imagem_hd.includes('http') 
+                ? product.imagem_hd 
+                : 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=600';
+
+            return `
+                <div class="card">
+                    <div class="card-img-wrap">
+                        <img src="${imgUrl}" alt="${product.nome}" class="card-img" loading="lazy">
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            <h4 class="card-title">${product.nome}</h4>
+                            <p class="card-desc">Clique para ver os detalhes completos.</p>
+                        </div>
+                        <a href="https://varadodifome.menudino.com.br/" target="_blank" class="btn btn-card">
+                            VER NO CARDÁPIO
+                        </a>
+                    </div>
+                </div>
+            `;
+        };
+
+        // --- 4. INICIALIZAÇÃO E EFEITOS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMenu();
+
+            // Menu Mobile
+            const toggle = document.querySelector('.mobile-toggle');
+            const nav = document.querySelector('.nav-menu');
+            toggle.addEventListener('click', () => {
+                nav.classList.toggle('active');
+                toggle.innerHTML = nav.classList.contains('active') 
+                    ? '<i class="fas fa-times"></i>' 
+                    : '<i class="fas fa-bars"></i>';
+            });
+
+            // Fechar menu ao clicar
+            document.querySelectorAll('.nav-menu a').forEach(a => {
+                a.addEventListener('click', () => nav.classList.remove('active'));
+            });
+
+            // Header Scroll Effect
+            window.addEventListener('scroll', () => {
+                document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
+            });
+
+            // Scroll Reveal Animation (Intersection Observer)
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+
+    </script>
+</body>
+</html>

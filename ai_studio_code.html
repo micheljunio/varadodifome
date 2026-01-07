@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VARADO DI FOME | Hamburgueria Artesanal</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome (Ícones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- 1. VARIÁVEIS & RESET --- */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #FF9900 0%, #FF4500 100%);
+            --secondary-gradient: linear-gradient(135deg, #1e1e1e 0%, #000000 100%);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-blur: blur(15px);
+            --text-color: #f0f0f0;
+            --text-muted: #aaaaaa;
+            --bg-color: #121212;
+            --accent: #FFCC00;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+            list-style: none;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .logo {
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* --- 2. UTILITÁRIOS & ANIMAÇÕES --- */
+        .gradient-text {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 69, 0, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 69, 0, 0.6);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #FF4500;
+            color: #FF4500;
+        }
+
+        .btn-outline:hover {
+            background: #FF4500;
+            color: white;
+        }
+
+        /* Animação de Scroll (AOS Simulado) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- 3. HEADER (GLASSMORPHISM) --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 5%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            background: rgba(18, 18, 18, 0.85);
+            backdrop-filter: var(--glass-blur);
+            padding: 15px 5%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .logo {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .logo span {
+            color: #FF4500;
+        }
+
+        .navlist {
+            display: flex;
+            gap: 30px;
+        }
+
+        .navlist a {
+            color: white;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .navlist a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #FF4500;
+            bottom: -5px;
+            left: 0;
+            transition: var(--transition);
+        }
+
+        .navlist a:hover::after {
+            width: 100%;
+        }
+
+        #menu-icon {
+            font-size: 2rem;
+            color: white;
+            display: none;
+            cursor: pointer;
+        }
+
+        /* --- 4. HERO SECTION (VIDEO) --- */
+        .hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0 5%;
+            overflow: hidden;
+        }
+
+        /* Overlay Gradiente */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.1) 100%);
+            z-index: 1;
+        }
+
+        /* Video Background */
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 650px;
+        }
+
+        .hero-content h1 {
+            font-size: 4.5rem;
+            line-height: 1;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: #e0e0e0;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* --- 5. BENEFITS BAR --- */
+        .benefits {
+            background: #1a1a1a;
+            padding: 40px 5%;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+        }
+
+        .benefit-item i {
+            font-size: 2rem;
+            color: #FF4500;
+        }
+
+        .benefit-text h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        .benefit-text span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* --- 6. MENU VITRINE (GRID & GLASS CARDS) --- */
+        .menu-section {
+            padding: 80px 5%;
+            background: var(--bg-color);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+        }
+
+        .category-title {
+            font-size: 1.8rem;
+            margin: 40px 0 20px;
+            border-left: 5px solid #FF4500;
+            padding-left: 15px;
+            display: inline-block;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        /* Glass Card */
+        .product-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-10px);
+            border-color: #FF4500;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            transition: var(--transition);
+        }
+
+        .product-card:hover .product-img {
+            transform: scale(1.05);
+        }
+
+        .product-info h3 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        .product-info p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .btn-card {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            background: #333;
+            color: white;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        .btn-card:hover {
+            background: #FF4500;
+        }
+
+        /* --- 7. PARALLAX PROMO --- */
+        .promo-section {
+            background-image: url('https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1965&auto=format&fit=crop');
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+            padding: 100px 5%;
+            text-align: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .promo-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .promo-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            max-width: 800px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .promo-content h2 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .promo-content p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: var(--accent);
+        }
+
+        /* --- 8. SOBRE & DIFERENCIAIS --- */
+        .about {
+            padding: 80px 5%;
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            background: #0f0f0f;
+        }
+
+        .about-img {
+            flex: 1;
+            position: relative;
+        }
+
+        .about-img img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: -10px 10px 0px #FF4500;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .about-text p {
+            margin-bottom: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #1e1e1e;
+            padding: 15px;
+            border-left: 4px solid var(--accent);
+            margin-top: 20px;
+        }
+
+        /* --- 9. FOOTER --- */
+        footer {
+            background: #050505;
+            color: white;
+            padding-top: 60px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            padding: 0 5% 60px 5%;
+        }
+
+        .footer-col h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #FF4500;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background: #222;
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: #FF4500;
+            transform: translateY(-3px);
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+            color: var(--text-muted);
+        }
+
+        .footer-col ul li i {
+            color: #FF4500;
+            margin-right: 10px;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 200px;
+            border-radius: 10px;
+            border: none;
+            filter: grayscale(100%) invert(92%) contrast(83%);
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 20px;
+            background: #000;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #222;
+        }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 991px) {
+            .hero-content h1 {
+                font-size: 3.5rem;
+            }
+            
+            .about {
+                flex-direction: column;
+            }
+            
+            #menu-icon {
+                display: block;
+            }
+
+            .navlist {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(18, 18, 18, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 30px;
+                text-align: center;
+                transform: translateY(-150%);
+                transition: var(--transition);
+                border-bottom: 2px solid #FF4500;
+            }
+
+            .navlist.open {
+                transform: translateY(0);
+            }
+
+            .promo-content h2 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 2.8rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .section-header h2 {
+                font-size: 2.2rem;
+            }
+
+            .promo-section {
+                background-attachment: scroll; /* Fix para mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="header">
+        <a href="#" class="logo">VARADO DI <span>FOME</span></a>
+        
+        <ul class="navlist">
+            <li><a href="#hero">Início</a></li>
+            <li><a href="#benefits">Diferenciais</a></li>
+            <li><a href="#menu">Cardápio</a></li>
+            <li><a href="#about">Sobre</a></li>
+            <!-- CTA Mobile dentro do menu -->
+            <li class="mobile-only"><a href="https://varadodifome.menudino.com.br/" target="_blank" style="color: #FF4500;">PEDIR AGORA</a></li>
+        </ul>
+
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <a href="https://varadodifome.menudino.com.br/" target="_blank" class="btn btn-primary" id="btn-header-cta">PEDIR ONLINE</a>
+            <div id="menu-icon"><i class="fas fa-bars"></i></div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <!-- Video BG Placeholder -->
+        <video class="video-bg" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?q=80&w=2071&auto=format&fit=crop">
+            <!-- Link direto de exemplo para video. Substitua pelo seu arquivo real se tiver -->
+            <source src="https://www.pexels.com/download/video/8879537/" type="video/mp4">
+        </video>
+
+        <div class="hero-content reveal">
+            <h1>BATEU AQUELA <br><span class="gradient-text">FOME MONSTRUOSA?</span></h1>
+            <p>A solução definitiva para quem está varado de fome! Hamburgueres artesanais, suculentos e preparados na hora.</p>
+            <div class="hero-buttons">
+                <a href="https://varadodifome.menudino.com.br/" target="_blank" class="btn btn-primary">FAZER PEDIDO AGORA</a>
+                <a href="#menu" class="btn btn-outline">VER CARDÁPIO</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Bar -->
+    <div class="benefits" id="benefits">
+        <div class="benefit-item reveal">
+            <i class="fas fa-motorcycle"></i>
+            <div class="benefit-text">
+                <h4>Entrega Rápida</h4>
+                <span>51-61 min</span>
+            </div>
+        </div>
+        <div class="benefit-item reveal">
+            <i class="fas fa-wallet"></i>
+            <div class="benefit-text">
+                <h4>Pedido Mínimo</h4>
+                <span>R$ 10,00</span>
+            </div>
+        </div>
+        <div class="benefit-item reveal">
+            <i class="fas fa-fire"></i>
+            <div class="benefit-text">
+                <h4>Melhor da Região</h4>
+                <span>Smashs Artesanais</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Section -->
+    <section class="menu-section" id="menu">
+        <div class="section-header reveal">
+            <h2>NOSSA <span class="gradient-text">VITRINE</span></h2>
+            <p>Escolha o seu preferido e peça direto pelo MenuDino</p>
+        </div>
+
+        <!-- Categoria 1: Smash Burgers -->
+        <h3 class="category-title reveal">Smash Burgers</h3>
+        <div class="menu-grid">
+            <!-- Item 1 -->
+            <div class="product-card reveal">
+                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1899&auto=format&fit=crop" alt="Smash Bacon" class="product-img">
+                <div class="product-info">
+                    <h3>Smash Bacon</h3>
+                    <p>Pão brioche, 2 blends 80g ultra suculentos, muito queijo mussarela, fatias de bacon crocante, salada fresca e maionese da casa.</p>
+                    <div class="price-row">
+                        <span class="price">R$ 29,90</span>
+                        <a href="https://varadodifome.menudino.com.br/" target="_blank" class="btn-card">QUERO ESSE</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="product-card reveal">
+                <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?q=80&w=2071&auto=format&fit=crop" alt="Varado Supremo" class="product-img">
+                <div class="product-info">
+                    <h3>Varado Supremo</h3>
+                    <p>Para quem tem coragem: Pão Brioche, 4 Carnes 80g, quádruplo queijo, bacon em dobro, cebola empanada e catupiry original.</p>
+                    <div class="price-row">
+                        <span class="price">R$ 42,90</span>
+                        <a href="https://varadodifome.menudino.com.br/" target="_blank" class="btn-card">QUERO ESSE</a>
+                    </div>
+                </div>
+            </div>
+             <!-- Item 3 -->
+             <div class="product-card reveal">
+                <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1965&auto=format&fit=crop" alt="Smash Salad" class="product-img">
+                <div class="product-info">
+                    <h3>Smash Salad Duplo</h3>
+                    <p>O clássico bem feito. Pão selado na manteiga, 2 carnes smash, queijo prato derretido, alface americana e tomate.</p>
+                    <div class="price-row">
+                        <span class="price">R$ 26,90</span>
+                        <a href="https://varadodifome.menudino.com.br/" target="_blank" class="btn-card">QUERO ESSE</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categoria 2: Barcas e Combos -->
+        <h3 class="category-title reveal">Barcas & Combos</h3>
+        <div class="menu-grid">
+            <!-- Item 4 -->
+            <div class="product-card reveal">
+                <img src="https://images.unsplash.com/photo-1628294896516-344152572ee8?q=80&w=2070&auto=format&fit=crop" alt="Barca Petisco" class="product-img">
+                <div class="product-info">
+                    <h3>Barca Petisco</h3>
+                    <p>Ideal para dividir. 20 mini chicken, 20 cebolas empanadas, batata frita especial com cheddar e bacon.</p>
+                    <div class="price-row">
+                        <span class="price">R$ 69,90</span>
+                        <a href="https://varadodifome.menudino.com.br/" target="_blank" class="btn-card">QUERO ESSE</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="product-card reveal">
+                <img src="https://images.unsplash.com/photo-1596662951482-0c4ba74a6df6?q=80&w=1974&auto=format&fit=crop" alt="Combo Monstruoso" class="product-img">
+                <div class="product-info">
+                    <h3>Combo Monstruoso</h3>
+                    <p>Fome de leão? 2 Burgers Varado Supremo, Batata Grande 300g e Guaraná 1L gelado.</p>
+                    <div class="price-row">
+                        <span class="price">R$ 124,90</span>
+                        <a href="https://varadodifome.menudino.com.br/" target="_blank" class="btn-card">QUERO ESSE</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parallax Promo -->
+    <section class="promo-section reveal">
+        <div class="promo-content">
+            <h2>PROMO <span style="color:#FFD700">FRIENDS</span></h2>
+            <p>Compre um Combo Friends e ganhe 1 burger extra! Oferta válida apenas hoje.</p>
+            <a href="https://varadodifome.menudino.com.br/" target="_blank" class="btn btn-primary" style="font-size: 1.2rem; padding: 15px 40px;">APROVEITAR PROMOÇÃO</a>
+        </div>
+    </section>
+
+    <!-- Sobre Section -->
+    <section class="about" id="about">
+        <div class="about-img reveal">
+            <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=2070&auto=format&fit=crop" alt="Interior da Hamburgueria">
+        </div>
+        <div class="about-text reveal">
+            <h2 class="gradient-text">QUALIDADE PREMIUM</h2>
+            <p>No <strong>Varado Di Fome</strong>, não fazemos apenas hambúrgueres, criamos experiências. Nossa carne é moída diariamente, garantindo um blend fresco e suculento que derrete na boca.</p>
+            <p>Usamos pães artesanais de fermentação natural e nossa famosa <strong>Maionese Verde Secreta</strong> que é viciante.</p>
+            
+            <div class="highlight-box">
+                <i class="fas fa-check-circle" style="color: var(--accent); margin-right: 10px;"></i>
+                Ingredientes frescos selecionados todos os dias.
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>VARADO DI FOME</h3>
+                <p>A hamburgueria que mata sua fome com estilo. Siga-nos nas redes sociais para cupons exclusivos.</p>
+                <div class="social-links" style="margin-top: 20px;">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>Atendimento</h3>
+                <ul>
+                    <li><i class="far fa-clock"></i> Ter a Dom: 18:00 - 23:30</li>
+                    <li><i class="fas fa-phone"></i> (XX) 99999-9999</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Rua da Fome, 123 - Centro</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Localização</h3>
+                <div class="map-container">
+                    <!-- Iframe Placeholder -->
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.1975762015563!2d-46.65207798502213!3d-23.56134958468285!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c8da0aa315%3A0xd59f9431f2c9776a!2sAv.%20Paulista%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1620050000000!5m2!1spt-BR!2sbr" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2026 VARADO DI FOME. Todos os direitos reservados. Design by Senior Front-end.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Menu Mobile Toggle
+        const menuIcon = document.getElementById('menu-icon');
+        const navlist = document.querySelector('.navlist');
+
+        menuIcon.addEventListener('click', () => {
+            navlist.classList.toggle('open');
+            // Troca o ícone de bars para X
+            if(navlist.classList.contains('open')){
+                menuIcon.innerHTML = '<i class="fas fa-times"></i>';
+            } else {
+                menuIcon.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        });
+
+        // Fechar menu ao clicar em um link
+        document.querySelectorAll('.navlist a').forEach(link => {
+            link.addEventListener('click', () => {
+                navlist.classList.remove('open');
+                menuIcon.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+
+        // Sticky Header Effect
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Scroll Reveal Animation (Simulando AOS)
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 100;
+
+            revealElements.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        // Trigger once on load
+        revealOnScroll();
+
+    </script>
+</body>
+</html>
